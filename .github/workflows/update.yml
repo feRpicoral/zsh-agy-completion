@@ -1,0 +1,71 @@
+name: Update completions
+
+on:
+  schedule:
+    - cron: "0 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install zsh
+        run: sudo apt-get update && sudo apt-get install -y zsh
+
+      - name: Install the Antigravity CLI
+        run: |
+          curl -fsSL https://antigravity.google/cli/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Regenerate from the installed CLI
+        run: ./scripts/update.sh
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "version=$(cat agy-version)" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Pull requests opened with GITHUB_TOKEN do not trigger other workflows, so the tests
+      # have to run here.
+      - name: Run completion tests
+        if: steps.changes.outputs.changed == 'true'
+        run: ./scripts/test.zsh
+
+      - name: Open pull request
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.changes.outputs.version }}
+        run: |
+          branch="update/agy-$VERSION"
+          if git ls-remote --exit-code --heads origin "$branch" > /dev/null; then
+            echo "A pull request branch for agy $VERSION already exists"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add _agy agy-version
+          git commit -m "feat: update completions for agy $VERSION"
+          git push origin "$branch"
+
+          gh pr create \
+            --title "feat: update completions for agy $VERSION" \
+            --body "Regenerated \`_agy\` from the help output of agy $VERSION."

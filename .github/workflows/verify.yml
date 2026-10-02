@@ -1,0 +1,53 @@
+name: Verify
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install zsh
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y zsh
+
+      - name: Run completion tests
+        run: ./scripts/test.zsh
+
+  reproducible:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install zsh
+        run: sudo apt-get update && sudo apt-get install -y zsh
+
+      - name: Install the Antigravity CLI
+        run: |
+          curl -fsSL https://antigravity.google/cli/install.sh | bash
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      # The installer only offers the latest release, so the check is meaningful only while
+      # that is still the version _agy was generated from.
+      - name: Fail if _agy differs from the generator output
+        run: |
+          if [ "$(agy --version 2>&1)" != "$(cat agy-version)" ]; then
+            echo "::notice::agy $(agy --version 2>&1) is newer than the pinned $(cat agy-version); skipping"
+            exit 0
+          fi
+          ./scripts/update.sh
+          git diff --exit-code
