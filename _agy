@@ -1,0 +1,235 @@
+#compdef agy
+
+# Generated from the help output of Antigravity CLI 1.2.14.
+
+_agy_node() {
+  subs=() alias_pairs=() opts=() args=()
+  case $1 in
+    '')
+      subs=(
+        'agent:List available agents'
+        'agents:List available agents'
+        'changelog:Show changelog and release notes'
+        'help:Show help for subcommands'
+        'install:Configure environment paths and shell settings'
+        'mcp:Manage MCP servers (add, remove, list, enable, disable)'
+        'mic-serve:Serve this machine'\''s microphone to a CLI on another host'
+        'models:List available models'
+        'plugin:Manage plugins (install, uninstall, list, enable, disable)'
+        'plugins:Manage plugins (install, uninstall, list, enable, disable)'
+        'remote-control:Manage the remote-control background daemon (start, status, stop)'
+        'update:Update CLI'
+      )
+      alias_pairs=(agents agent plugins plugin)
+      opts=(
+        '*--add-dir=[Add a directory to the workspace (repeatable)]:add-dir:_files -/'
+        '--agent=[Agent for the current CLI session]:agent: '
+        '(-c --continue)'{-c,--continue}'[Continue the most recent conversation]'
+        '--conversation=[Resume a previous conversation by ID]:conversation: '
+        '--dangerously-skip-permissions[Auto-approve all tool permission requests without prompting]'
+        '--disable-slash-commands[Disable slash command and skill expansion in print mode]'
+        '--effort=[Reasoning effort for the current CLI session (low|medium|high|max)]:effort:(low medium high max)'
+        '--input-format=[Input format for print mode (text, stream-json).]:input-format:(text stream-json)'
+        '--json-schema=[Optional JSON schema string or path to a schema file to enforce structured output (for stream-json, only applicable to...]:json-schema:_files'
+        '--log-file=[Override CLI log file path]:log-file:_files'
+        '--mode=[Set the agent execution mode for this session (accept-edits, plan)]:mode:(accept-edits plan)'
+        '--model=[Model for the current CLI session]:model: '
+        '--new-project[Create a new project for this session]'
+        '--output-format=[Output format for print mode (text, json, stream-json) (default text)]:output-format:(text json stream-json)'
+        '(-p --print)'{-p=,--print=}'[Run a single prompt non-interactively and print the response]:print: '
+        '--print-timeout=[Optional time limit for print mode; 0 waits until the turn completes (default 0s)]:print-timeout: '
+        '--project=[Project ID or project name for the current CLI session]:project: '
+        '--prompt=[Alias for --print]:prompt: '
+        '(-i --prompt-interactive)'{-i=,--prompt-interactive=}'[Run an initial prompt interactively and continue the session]:prompt-interactive: '
+        '--remote-control[Create a remote connection for the CLI session on start up]'
+        '--sandbox[Run in a sandbox with terminal restrictions enabled]'
+        '(-h --help)'{-h,--help}'[Show help]'
+        '--version[Show the CLI version]'
+      )
+      args=(': :->command')
+      ;;
+    'agent')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      ;;
+    'changelog')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      ;;
+    'install')
+      opts=(
+        '--dir=[Custom directory target to configure PATH for]:dir:_files -/'
+        '(-h --help)'{-h,--help}'[Show help]'
+        '--skip-aliases[Bypasses shell profile alias purging]'
+        '--skip-path[Bypasses shell profile PATH appending]'
+      )
+      ;;
+    'mcp')
+      subs=(
+        'add:Add or update an MCP server configuration'
+        'remove:Remove an MCP server configuration'
+        'list:List all configured MCP servers'
+        'enable:Enable an MCP server'
+        'disable:Disable an MCP server'
+      )
+      args=(': :->command')
+      ;;
+    'mcp add')
+      opts=(
+        '*'{-e=,--env=}'[Environment variable KEY=value (repeatable)]:env: '
+        '*'{-H=,--header=}'[HTTP header Key: Value (repeatable)]:header: '
+        '(-h --help)'{-h,--help}'[Show help]'
+        '(-t --type)'{-t=,--type=}'[Server type: '\''stdio'\'' or '\''http'\'' (default stdio)]:type:(stdio http)'
+      )
+      args=(':name: ' ':commandOrUrl: ' '*:args: ')
+      ;;
+    'mcp remove')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      args=(':name: ')
+      ;;
+    'mcp list')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      ;;
+    'mcp enable')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      args=(':name: ')
+      ;;
+    'mcp disable')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      args=(':name: ')
+      ;;
+    'mic-serve')
+      opts=(
+        '--addr=[Address to listen on; keep it on loopback (default 127.0.0.1:4713)]:addr: '
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      ;;
+    'models')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      ;;
+    'plugin')
+      subs=(
+        'list:List imported plugins'
+        'import:Import plugins from gemini or claude'
+        'install:Install a plugin (supports plugin@marketplace)'
+        'uninstall:Uninstall a plugin'
+        'enable:Enable a plugin'
+        'disable:Disable a plugin'
+        'validate:Validate a plugin'
+        'link:Generate link to a marketplace'
+        'help:Show this help'
+      )
+      args=(': :->command')
+      ;;
+    'plugin import')
+      args=('::source: ')
+      ;;
+    'plugin install')
+      args=(':target: ')
+      ;;
+    'plugin uninstall')
+      args=(':name: ')
+      ;;
+    'plugin enable')
+      args=(':name: ')
+      ;;
+    'plugin disable')
+      args=(':name: ')
+      ;;
+    'plugin validate')
+      args=('::path:_files')
+      ;;
+    'plugin link')
+      args=(':mp: ' ':target: ')
+      ;;
+    'remote-control')
+      subs=(
+        'start:Register and start the remote-control daemon'
+        'status:Show the daemon'\''s status'
+        'stop:Stop the daemon and unregister it'
+      )
+      args=(': :->command')
+      ;;
+    'remote-control start')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+        '--name=[Set this machine'\''s instance name shown in Remote Control]:name: '
+        '--session[Register the daemon login-scoped (stops at logout) instead of starting at boot]'
+      )
+      ;;
+    'remote-control status')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      ;;
+    'remote-control stop')
+      opts=(
+        '(-h --help)'{-h,--help}'[Show help]'
+      )
+      ;;
+  esac
+}
+
+_agy_load() {
+  local spec flag
+  _agy_node "$node"
+  alias_of=($alias_pairs)
+  value_flags=()
+  for spec in $opts; do
+    spec=${spec#\(*\)}
+    flag=${${spec#\*}%%[\[:]*}
+    [[ $flag == *= ]] && value_flags+=(${flag%=})
+  done
+}
+
+_agy() {
+  local curcontext=$curcontext state state_descr line node word
+  local -a subs alias_pairs opts args value_flags
+  local -A opt_args alias_of
+  local -i i=2 start=1 positional=0 ret=1
+
+  _agy_load
+  while (( i < CURRENT )); do
+    word=$words[i]
+    if [[ $word == -- ]]; then
+      break
+    elif [[ $word == -?* ]]; then
+      [[ $word != *=* ]] && (( $value_flags[(Ie)$word] )) && (( i++ ))
+    elif (( ! positional )); then
+      word=${alias_of[$word]:-$word}
+      if [[ -z $node && $word == help ]]; then
+        start=$i
+      elif (( $subs[(I)${(b)word}:*] )); then
+        node="${node:+$node }$word"
+        start=$i
+        _agy_load
+      else
+        positional=1
+      fi
+    fi
+    (( i++ ))
+  done
+
+  words=($words[1] "${(@)words[start+1,-1]}")
+  (( CURRENT -= start - 1 ))
+
+  _arguments -S -C : $opts $args && ret=0
+  if [[ $state == command ]]; then
+    _describe -t commands 'agy command' subs && ret=0
+  fi
+  return ret
+}
+
+_agy "$@"
