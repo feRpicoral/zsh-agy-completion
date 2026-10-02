@@ -1,0 +1,44 @@
+#compdef agy-sweep
+
+# Completes `-` under every command path in _agy and reports each path whose offered options
+# differ from the ones that path declares.
+
+local line command_path spec offered declared
+local -a paths subs alias_pairs opts args expected report
+
+for line in "${(@f)$(<$AGY_COMPLETION_DIR/_agy)}"; do
+  [[ $line == "    '"*"')" ]] && paths+=("${${line#    \'}%\'\)}")
+done
+
+# The helper functions only exist once _agy has run.
+words=(agy -)
+CURRENT=2
+PREFIX=-
+_agy
+
+for command_path in $paths; do
+  words=(agy ${=command_path} -)
+  CURRENT=$#words
+  PREFIX=-
+  agy_test_output=()
+
+  _agy 2>> $AGY_TEST_TMP/sweep-stderr
+
+  _agy_node "$command_path"
+  expected=()
+  for spec in $opts; do
+    spec=${spec#\(*\)}
+    expected+=(${${${spec#\*}%%[\[:]*}%=})
+  done
+  offered=${(j: :)${(ou)${(M)agy_test_output:#-?*}}}
+  declared=${(j: :)${(ou)expected}}
+  if [[ $offered != $declared ]]; then
+    report+=("'$command_path' offered [$offered] but declares [$declared]")
+  fi
+done
+
+if [[ -s $AGY_TEST_TMP/sweep-stderr ]]; then
+  report+=("completion wrote to stderr: $(<$AGY_TEST_TMP/sweep-stderr)")
+fi
+agy_test_output=("swept $#paths command paths" $report)
+return 0
