@@ -1,6 +1,6 @@
 #compdef agy
 
-# Generated from the help output of Antigravity CLI 1.2.14.
+# Generated from the help output of Antigravity CLI 1.2.16.
 
 _agy_node() {
   subs=() alias_pairs=() opts=() args=()
@@ -28,7 +28,7 @@ _agy_node() {
         '--conversation=[Resume a previous conversation by ID]:conversation: '
         '--dangerously-skip-permissions[Auto-approve all tool permission requests without prompting]'
         '--disable-slash-commands[Disable slash command and skill expansion in print mode]'
-        '--effort=[Reasoning effort for the current CLI session (low|medium|high|max)]:effort:(low medium high max)'
+        '--effort=[Reasoning effort for the current CLI session (low|medium|high|xhigh|max)]:effort:(low medium high xhigh max)'
         '--input-format=[Input format for print mode (text, stream-json).]:input-format:(text stream-json)'
         '--json-schema=[Optional JSON schema string or path to a schema file to enforce structured output (for stream-json, only applicable to...]:json-schema:_files'
         '--log-file=[Override CLI log file path]:log-file:_files'
@@ -123,7 +123,7 @@ _agy_node() {
       subs=(
         'list:List imported plugins'
         'import:Import plugins from gemini or claude'
-        'install:Install a plugin (supports plugin@marketplace)'
+        'install:Install a plugin (supports plugin[@marketplace])'
         'uninstall:Uninstall a plugin'
         'enable:Enable a plugin'
         'disable:Disable a plugin'
