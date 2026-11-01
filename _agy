@@ -1,6 +1,6 @@
 #compdef agy
 
-# Generated from the help output of Antigravity CLI 1.2.14.
+# Generated from the help output of Antigravity CLI 1.4.12.
 
 _agy_node() {
   subs=() alias_pairs=() opts=() args=()
@@ -28,11 +28,11 @@ _agy_node() {
         '--conversation=[Resume a previous conversation by ID]:conversation: '
         '--dangerously-skip-permissions[Auto-approve all tool permission requests without prompting]'
         '--disable-slash-commands[Disable slash command and skill expansion in print mode]'
-        '--effort=[Reasoning effort for the current CLI session (low|medium|high|max)]:effort:(low medium high max)'
+        '--effort=[Reasoning effort for the current CLI session (low|medium|high|xhigh|max)]:effort:(low medium high xhigh max)'
         '--input-format=[Input format for print mode (text, stream-json).]:input-format:(text stream-json)'
         '--json-schema=[Optional JSON schema string or path to a schema file to enforce structured output (for stream-json, only applicable to...]:json-schema:_files'
         '--log-file=[Override CLI log file path]:log-file:_files'
-        '--mode=[Set the agent execution mode for this session (accept-edits, plan)]:mode:(accept-edits plan)'
+        '--mode=[Set the agent execution mode for this session (accept-edits, auto, plan)]:mode:(accept-edits auto plan)'
         '--model=[Model for the current CLI session]:model: '
         '--new-project[Create a new project for this session]'
         '--output-format=[Output format for print mode (text, json, stream-json) (default text)]:output-format:(text json stream-json)'
@@ -43,6 +43,7 @@ _agy_node() {
         '(-i --prompt-interactive)'{-i=,--prompt-interactive=}'[Run an initial prompt interactively and continue the session]:prompt-interactive: '
         '--remote-control[Create a remote connection for the CLI session on start up]'
         '--sandbox[Run in a sandbox with terminal restrictions enabled]'
+        '--settings=[Settings for this session only, never saved: a JSON object of settings.json keys, inline or as a file path]:settings:_files'
         '(-h --help)'{-h,--help}'[Show help]'
         '--version[Show the CLI version]'
       )
@@ -121,17 +122,20 @@ _agy_node() {
       ;;
     'plugin')
       subs=(
-        'list:List imported plugins'
+        'list:List installed plugins'
         'import:Import plugins from gemini or claude'
-        'install:Install a plugin (supports plugin@marketplace)'
+        'install:Install a plugin (supports plugin[@marketplace])'
         'uninstall:Uninstall a plugin'
         'enable:Enable a plugin'
         'disable:Disable a plugin'
-        'validate:Validate a plugin'
+        'validate:'
         'link:Generate link to a marketplace'
         'help:Show this help'
       )
       args=(': :->command')
+      ;;
+    'plugin list')
+      args=('::--json: ')
       ;;
     'plugin import')
       args=('::source: ')
@@ -149,7 +153,7 @@ _agy_node() {
       args=(':name: ')
       ;;
     'plugin validate')
-      args=('::path:_files')
+      args=('::path:_files' '::--strict: ' '::--json: ')
       ;;
     'plugin link')
       args=(':mp: ' ':target: ')
